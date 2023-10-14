@@ -1,0 +1,109 @@
+<button mat-dialog-title mat-button class="{{payment.status_color}}">
+    <mat-icon>{{payment.status_icon}}</mat-icon>
+    {{payment.payment_status}}
+</button>
+
+<mat-dialog-content class="mat-dialog-data">
+
+    <div class="row">
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Amount</mat-label>
+                <input matInput placeholder="Amount" disabled value="{{payment?.amount}}">
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Payment Method</mat-label>
+                <input matInput placeholder="Payment Method" disabled value="{{payment?.paymentMethod?.display_name}}">
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Branch</mat-label>
+                <input matInput placeholder="Branch" disabled value="{{payment?.branch?.name}}">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Payment Date</mat-label>
+                <input matInput placeholder="Payment Date" disabled value="{{payment?.payment_date}}">
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Receipt Number</mat-label>
+                <input matInput placeholder="Receipt Number" disabled value="{{payment?.receipt_number}}">
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Created By</mat-label>
+                <input matInput placeholder="Created By" disabled value="{{payment?.creator?.first_name}} {{payment?.creator?.last_name}}">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Member First Name</mat-label>
+                <input matInput placeholder="Member First Name" disabled value="{{payment?.member?.first_name}}">
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Member Last Name</mat-label>
+                <input matInput placeholder="Member Last Name" disabled value="{{payment?.member?.last_name}}">
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Member Phone</mat-label>
+                <input matInput placeholder="Member Phone" disabled value="{{payment?.member?.phone}}">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row"  *ngIf="payment?.notes">
+        <div class="col-12">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Notes</mat-label>
+                <textarea  matInput placeholder="Notes" disabled maxlength="150" rows="1" value="{{payment?.notes}}"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="payment?.cancel">
+        <div class="col-12">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Cancelled By</mat-label>
+                <input matInput placeholder="Cancelled By" disabled value="{{payment?.cancel_user?.first_name}} {{payment?.cancel_user?.last_name}}">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row" *ngIf="payment?.cancel">
+        <div class="col-12">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Cancel Comments</mat-label>
+                <textarea  matInput placeholder="Cancel Comments" disabled maxlength="150" rows="1" value="{{payment?.cancel_notes}}"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="payment?.approve">
+        <div class="col-12">
+            <mat-form-field color="primary" appearance="outline">
+                <mat-label>Approved By</mat-label>
+                <input matInput placeholder="Approved By" disabled value="{{payment?.approve_user?.first_name}} {{payment?.approve_user?.last_name}}">
+            </mat-form-field>
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+    <button mat-button class="mat-raised-button" [mat-dialog-close]="true">Close</button>
+</mat-dialog-actions>

@@ -1,0 +1,26 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-4">
+                <button class="mat-raised-button mat-primary mr-2" (click)="viewStatement()" [disabled]="loader">
+                    <span>View Statement</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-4">
+                <button class="mat-raised-button mat-primary" (click)="downloadStatement()" [disabled]="loader">
+                    <mat-icon color="primary">picture_as_pdf</mat-icon>
+                    <span>Download Statement</span>
+                </button>
+            </div>
+            <div class="col-3">
+                <div class="d-flex justify-content-center spinner-container" *ngIf="loader">
+                    downloading ...
+                    <mat-spinner [diameter]="40"></mat-spinner>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

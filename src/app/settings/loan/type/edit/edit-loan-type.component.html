@@ -1,0 +1,172 @@
+<h5 mat-dialog-title>Edit Loan Type</h5>
+
+<mat-dialog-content class="mat-dialog-data" [formGroup]="form"  (ngSubmit)="updateType()">
+
+    <div class="row">
+        <div class="col-8">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" placeholder="Name">
+                <mat-error align="start" *ngIf="formErrors?.name" class="form__error">{{ formErrors.name }}</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Repayment Period</mat-label>
+                <input matInput type="number" min="0" formControlName="repayment_period" placeholder="Repayment Period">
+                <mat-error align="start" *ngIf="formErrors?.repayment_period" class="form__error">{{ formErrors.repayment_period }}</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-4">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Interest Rate</mat-label>
+                <input matInput type="number" min="0" formControlName="interest_rate" placeholder="Interest Rate">
+                <mat-error align="start" *ngIf="formErrors?.interest_rate" class="form__error">{{ formErrors.interest_rate }}</mat-error>
+            </mat-form-field>
+
+        </div>
+        <div class="col-4">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Interest Type</mat-label>
+                <mat-select placeholder="Interest Type" formControlName="interest_type_id">
+                    <mat-option *ngFor="let interestType of interestTypes" [value]="interestType.id">
+                        {{interestType.display_name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error align="start" *ngIf="formErrors?.interest_type_id" class="form__error">{{ formErrors.interest_type_id }}</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-4">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Repayment Frequency</mat-label>
+                <mat-select placeholder="Repayment Frequency" formControlName="payment_frequency_id">
+                    <mat-option *ngFor="let paymentFrequency of paymentFrequencies" [value]="paymentFrequency.id">
+                        {{paymentFrequency.display_name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error align="start" *ngIf="formErrors?.payment_frequency_id" class="form__error">{{ formErrors.payment_frequency_id }}</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Penalty Type</mat-label>
+                <mat-select placeholder="Penalty Type" formControlName="penalty_type_id">
+                    <mat-option *ngFor="let penaltyType of penaltyTypes" [value]="penaltyType.id">
+                        {{penaltyType.display_name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error align="start" *ngIf="formErrors?.penalty_type_id" class="form__error">{{ formErrors.penalty_type_id }}</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Penalty Value</mat-label>
+                <input matInput type="number" min="0" formControlName="penalty_value" placeholder="Penalty Value">
+                <mat-error align="start" *ngIf="formErrors?.penalty_value" class="form__error">{{ formErrors.penalty_value }}</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="col-4">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Penalty Frequency</mat-label>
+                <mat-select placeholder="Penalty Frequency" formControlName="penalty_frequency_id">
+                    <mat-option *ngFor="let penaltyFrequency of penaltyFrequencies" [value]="penaltyFrequency.id">
+                        {{penaltyFrequency.display_name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error align="start" *ngIf="formErrors?.penalty_frequency_id" class="form__error">{{ formErrors.penalty_frequency_id }}</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div  formArrayName="chargeFields"
+          *ngFor="let chargeField of form.get('chargeFields')['controls']; let i = index;">
+        <div class="row" [formGroupName]="i">
+            <div class="col-4">
+                <mat-form-field class="full-width" color="primary"  appearance="outline">
+                    <mat-label>Loan Extra Charge</mat-label>
+                    <mat-select placeholder="Loan Extra Charge" formControlName="loan_extra_charge_id" #charge_type_select (selectionChange)="onChargeTypeItemChange(i, charge_type_select.value)">
+                        <mat-option *ngFor="let loanCharge of loanCharges" [value]="loanCharge.id">
+                            {{loanCharge.charge_name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error align="start" *ngIf="formErrors?.loan_extra_charge_id" class="form__error">{{ formErrors.loan_extra_charge_id }}</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-4">
+                <mat-form-field class="full-width" color="primary"  appearance="outline">
+                    <mat-label>Loan Extra Charge Type</mat-label>
+                    <mat-select placeholder="Loan Extra Charge Type" formControlName="loan_extra_charge_type_id">
+                        <mat-option *ngFor="let chargeType of chargeTypes" [value]="chargeType.id">
+                            {{chargeType.display_name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error align="start" *ngIf="formErrors?.loan_extra_charge_type_id" class="form__error">{{ formErrors.loan_extra_charge_type_id }}</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-3">
+                <mat-form-field class="full-width" color="primary"  appearance="outline">
+                    <mat-label>Loan Extra Charge Value</mat-label>
+                    <input matInput type="number" min="0" formControlName="loan_extra_charge_value" placeholder="Loan Extra Charge Value">
+                    <mat-error align="start" *ngIf="formErrors?.loan_extra_charge_value" class="form__error">{{ formErrors.loan_extra_charge_value }}</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-1">
+                <button (click)="removeChargeField(i)" style="margin-top:50%; text-align: left;" mat-icon-button color="accent" aria-label="Remove Loan Charge"
+                        matTooltip="Remove Loan Charge" [matTooltipPosition]="'above'">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col-6">
+            <button (click)="addChargeField()" style="margin-bottom: 20px;" class="mat-raised-button mat-accent" mat-button type="button"
+                    matTooltip="Add Loan Charge" [matTooltipPosition]="'above'">
+                <mat-icon color="material-icons">add</mat-icon>
+                <span>Add Loan Fee</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <mat-form-field class="full-width" color="primary" appearance="outline">
+                <mat-label>Notes</mat-label>
+                <textarea  formControlName="description" matInput #description placeholder="Notes" maxlength="150" rows="2"></textarea>
+                <mat-hint align="end">{{description.value.length}} / 150</mat-hint>
+                <mat-error align="start" *ngIf="formErrors?.description" class="form__error">{{ formErrors.description }}</mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+<div class="d-flex justify-content-center spinner-container" *ngIf="loader">
+    <mat-progress-bar
+            color="green"
+            mode="query"
+            value=50
+            bufferValue=75>
+    </mat-progress-bar>
+</div>
+
+<mat-dialog-actions align="center">
+    <button [disabled]="loader" mat-button class="mat-raised-button button-separate" [mat-dialog-close]="true" (click)="close()">Close</button>
+    <button class="mat-raised-button mat-primary" (click)="updateType()" [disabled]="!form.valid || loader">Save</button>
+</mat-dialog-actions>

@@ -1,0 +1,206 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                <form [formGroup]="form">
+
+                    <div class="row">
+                        <div class="col-4">
+                            <mat-form-field class="full-width" color="primary" appearance="outline">
+                                <mat-label>Amount Applied</mat-label>
+                                <input matInput formControlName="amount_applied" placeholder="Amount Applied">
+                                <mat-error align="start" *ngIf="formErrors?.amount_applied" class="form__error">{{ formErrors.amount_applied_display }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field class="full-width" color="primary" appearance="outline">
+                                <mat-label>Loan Type</mat-label>
+                                <input matInput formControlName="loan_type" placeholder="Loan Type">
+                                <mat-error align="start" *ngIf="formErrors?.loan_type" class="form__error">{{ formErrors.loan_type }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field class="full-width" color="primary" appearance="outline">
+                                <mat-label>Repayment Period</mat-label>
+                                <input matInput type="number" min="0" (ngModelChange)='repaymentPeriodModelChanged.next($event)' formControlName="repayment_period" placeholder="Repayment Period">
+                                <mat-error align="start" *ngIf="formErrors?.repayment_period" class="form__error">{{ formErrors.repayment_period }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <mat-form-field class="full-width" color="primary" appearance="outline">
+                                <mat-label>Interest Type</mat-label>
+                                <input matInput formControlName="interest_type" placeholder="Interest Type">
+                                <mat-error align="start" *ngIf="formErrors?.interest_type" class="form__error">{{ formErrors.interest_type }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-4">
+                            <mat-form-field class="full-width" color="primary" appearance="outline">
+                                <mat-label>Interest Rate</mat-label>
+                                <input matInput  (ngModelChange)='interestRateModelChanged.next($event)' formControlName="interest_rate" placeholder="Interest Rate">
+                                <mat-error align="start" *ngIf="formErrors?.interest_rate" class="form__error">{{ formErrors.interest_rate }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field  class="full-width" color="primary" appearance="outline">
+                                <mat-label>Start Date</mat-label>
+                                <input matInput [matDatepicker]="start_date" formControlName="start_date" placeholder="Start Date">
+                                <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
+                                <mat-datepicker #start_date></mat-datepicker>
+                                <mat-error align="start" *ngIf="formErrors?.start_date" class="form__error">{{ formErrors.start_date }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4">
+                            <mat-form-field class="full-width" color="primary" appearance="outline">
+                                <mat-label>Loan Officer*</mat-label>
+                                <mat-select placeholder="Loan Officer*" formControlName="loan_officer_id">
+                                    <mat-option *ngFor="let user of users" [value]="user.id">
+                                        {{user.first_name}} ( {{user.role.display_name}} )
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error align="start" *ngIf="formErrors?.loan_officer_id" class="form__error">{{ formErrors.loan_officer_id }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-4">
+                            <mat-form-field class="full-width" color="primary" appearance="outline">
+                                <mat-label>Disburse Method*</mat-label>
+                                <mat-select placeholder="Disburse Method*" formControlName="disburse_method_id" #paymentMethodSelect (selectionChange)="onPaymentMethodItemChange(paymentMethodSelect.value)">
+                                    <mat-option *ngFor="let method of methods" [value]="method.id">
+                                        {{method.display_name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error align="start" *ngIf="formErrors?.loan_officer_id" class="form__error">{{ formErrors.loan_officer_id }}</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-4">
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <ng-container *ngIf="isMpesa" formGroupName="mpesa_fields">
+                            <div class="col-4">
+                                <mat-form-field class="full-width" color="primary" appearance="outline">
+                                    <mat-label>Mpesa Number</mat-label>
+                                    <span matPrefix>254</span>
+                                    <input matInput type="number" min="0" formControlName="mpesa_number" placeholder="Mpesa Number">
+                                    <mat-hint align="start"><strong>e.g: 7xxxxxxxxx</strong> </mat-hint>
+                                    <mat-error align="start" *ngIf="formErrors?.mpesa_number" class="form__error">{{ formErrors.mpesa_number }}</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-4">
+                                <mat-form-field class="full-width" color="primary" appearance="outline">
+                                    <mat-label>Mpesa First Name</mat-label>
+                                    <input matInput formControlName="mpesa_first_name" placeholder="Mpesa First Name">
+                                    <mat-error align="start" *ngIf="formErrors?.interest_type" class="form__error">{{ formErrors.interest_type }}</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </ng-container>
+                    </div>
+
+
+                    <div formArrayName="chargeFields"
+                          *ngFor="let chargeField of form.get('chargeFields')['controls']; let i = index;">
+                        <div class="row" [formGroupName]="i">
+                            <div class="col-4">
+                                <mat-form-field class="full-width" color="primary"  appearance="outline">
+                                    <mat-label>Loan Extra Charge</mat-label>
+                                    <mat-select placeholder="Loan Extra Charge" formControlName="loan_extra_charge_id" #charge_type_select (selectionChange)="onChargeTypeItemChange(i, charge_type_select.value)">
+                                        <mat-option *ngFor="let loanCharge of loanCharges" [value]="loanCharge.id">
+                                            {{loanCharge.charge_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error align="start" *ngIf="formErrors?.loan_extra_charge_id" class="form__error">{{ formErrors.loan_extra_charge_id }}</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-4">
+                                <mat-form-field class="full-width" color="primary"  appearance="outline">
+                                    <mat-label>Loan Extra Charge Type</mat-label>
+                                    <mat-select placeholder="Loan Extra Charge Type" formControlName="loan_extra_charge_type_id">
+                                        <mat-option *ngFor="let chargeType of chargeTypes" [value]="chargeType.id">
+                                            {{chargeType.display_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error align="start" *ngIf="formErrors?.loan_extra_charge_type_id" class="form__error">{{ formErrors.loan_extra_charge_type_id }}</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-3">
+                                <mat-form-field class="full-width" color="primary"  appearance="outline">
+                                    <mat-label>Loan Extra Charge Value</mat-label>
+                                    <input matInput type="number" min="0" formControlName="loan_extra_charge_value" placeholder="Loan Extra Charge Value">
+                                    <mat-error align="start" *ngIf="formErrors?.loan_extra_charge_value" class="form__error">{{ formErrors.loan_extra_charge_value }}</mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-1">
+                                <button (click)="removeChargeField(i)" style="margin-top:50%; text-align: left;" mat-icon-button color="accent" aria-label="Remove Loan Charge"
+                                        matTooltip="Remove Loan Charge" [matTooltipPosition]="'above'">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <button (click)="addChargeField()" style="margin-bottom: 20px;" class="mat-raised-button mat-accent" mat-button type="button"
+                                    matTooltip="Add Loan Charge" [matTooltipPosition]="'above'">
+                                <mat-icon color="material-icons">add</mat-icon>
+                                <span>Add Loan Fee</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <mat-form-field class="full-width" color="primary" appearance="outline">
+                        <mat-label>Review Note</mat-label>
+                        <textarea  formControlName="review_notes" matInput #review_notes placeholder="Review Note" maxlength="150" rows="2"></textarea>
+                        <mat-hint align="end">{{review_notes.value.length}} / 150</mat-hint>
+                        <mat-error align="start" *ngIf="formErrors?.member_id" class="form__error">{{ formErrors.member_id }}</mat-error>
+                    </mat-form-field>
+
+                    <div class="row">
+                        <div class="col-2 collateral-review">
+                                 <mat-checkbox formControlName="collateral_check">Confirm Collateral Review</mat-checkbox>
+                                <mat-checkbox formControlName="guarantor_check">Confirm Guarantor Review</mat-checkbox>
+                        </div>
+                    </div>
+
+                    <div *ngIf="formErrors?.member_id" class="alert alert-danger">
+                        Error: {{ formErrors?.member_id }}
+                    </div>
+
+                    <ng-container class="container-fluid">
+
+                        <div class="d-flex justify-content-center spinner-container" *ngIf="loader">
+                            <mat-progress-bar
+                                    color="green"
+                                    mode="query"
+                                    value=50
+                                    bufferValue=75>
+                            </mat-progress-bar>
+                        </div>
+                        <br/>
+
+                        <div class="col-sm-12 text-center">
+                            <button class="mr-3 mat-raised-button mat-primary" (click)="covertToLoan()" [disabled]="!form.valid || convertingToLoan">Approve Loan</button>
+                            <button [disabled]="convertingToLoan" class="mr-3 mat-raised-button mat-warn" (click)="openConfirmationDialog()">Reject Loan</button>
+                        </div>
+                    </ng-container>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
