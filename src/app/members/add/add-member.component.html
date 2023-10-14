@@ -56,25 +56,7 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-6">
-            <mat-form-field class="full-width" color="primary" appearance="outline">
-                <mat-label>File Number</mat-label>
-                <input matInput formControlName="file_number" placeholder="File Number">
-                <mat-error align="start" *ngIf="formErrors?.file_number" class="form__error">{{ formErrors.file_number }}</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="col-6">
-            <mat-form-field class="full-width" color="primary" appearance="outline">
-                <mat-label>EDP Number</mat-label>
-                <input matInput formControlName="edp_number" placeholder="EDP Number">
-                <mat-error align="start" *ngIf="formErrors?.edp_number" class="form__error">{{ formErrors.edp_number }}</mat-error>
-            </mat-form-field>
-
-        </div>
-    </div>
-
+   
     <div class="row">
         <div class="col-4">
             <mat-form-field class="full-width" color="primary" appearance="outline">
@@ -165,24 +147,6 @@
             <input type="file" (change)="membershipFormUpload($event.target.files)" placeholder="" accept=".pdf,.doc,.docx">
              <mat-error align="start" *ngIf="formErrors?.membership_form" class="form__error">{{ formErrors.membership_form }}</mat-error>
          </div>
-    </div>
-
-    <div class="row">
-        <div class="col-6">
-            <mat-form-field class="full-width" color="primary" appearance="outline">
-                <mat-label>Password</mat-label>
-                <input matInput formControlName="password" placeholder="Password">
-                <mat-error align="start" *ngIf="formErrors?.password" class="form__error">{{ formErrors.password }}</mat-error>
-            </mat-form-field>
-        </div>
-
-        <div class="col-6">
-            <mat-form-field class="full-width" color="primary" appearance="outline">
-                <mat-label>Confirm Password</mat-label>
-                <input matInput formControlName="password_confirmation" placeholder="Confirm Password">
-                <mat-error align="start" *ngIf="formErrors?.password_confirmation" class="form__error">{{ formErrors.password_confirmation }}</mat-error>
-            </mat-form-field>
-        </div>
     </div>
 
 
