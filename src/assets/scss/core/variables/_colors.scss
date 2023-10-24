@@ -3,7 +3,7 @@ $red-100: #ffcdd2 !default;
 $red-200: #ef9a9a !default;
 $red-300: #e57373 !default;
 $red-400: #ef5350 !default;
-$red-500: #f44336 !default;
+$red-500: #3B409B !default;
 $red-600: #e53935 !default;
 $red-700: #d32f2f !default;
 $red-800: #c62828 !default;
@@ -306,17 +306,19 @@ $black: #000;
 $white: #fff;
 
 // New colors
-$gray-color:  #999999 !default;
+$gray-color: #999999 !default;
 $black-color: #3C4858 !default;
 
-$black: #000000; $rgb-black: "0,0,0" !default;
-$white: #ffffff; $rgb-white: "255,255,255" !default;
+$black: #000000;
+$rgb-black: "0,0,0" !default;
+$white: #ffffff;
+$rgb-white: "255,255,255" !default;
 
 //## Gray and brand colors for use across Bootstrap.
 
-$gray-base:              #000 !default;
-$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
-$gray-dark:              lighten($gray-base, 20%) !default;   // #333
-$gray:                   lighten($gray-base, 33.5%) !default; // #555
-$gray-light:             #999999 !default; // #999999
-$gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
+$gray-base: #000 !default;
+$gray-darker: lighten($gray-base, 13.5%) !default; // #222
+$gray-dark: lighten($gray-base, 20%) !default; // #333
+$gray: lighten($gray-base, 33.5%) !default; // #555
+$gray-light: #999999 !default; // #999999
+$gray-lighter: lighten($gray-base, 93.5%) !default; // #eee

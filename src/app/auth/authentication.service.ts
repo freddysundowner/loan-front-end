@@ -15,6 +15,16 @@ export class AuthenticationService extends BaseService<User>{
         super( http, '');
     }
 
+    
+    adminAuth(username: string, password: string) {
+        return this.http.post<any>(`${super.getApiUrl()}/adminauth`, {email: username, password})
+            .pipe(map((user) => {
+                const decodedToken = jwt_decode(user.access_token);
+                user.scope = decodedToken.scopes;
+                return user;
+            }));
+    }
+
     /**
      * Login api user and setup token for future use
      * @param username

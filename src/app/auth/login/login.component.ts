@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 
     /**
      * Fetch password field
-     */
+     */ 
     get password() {
         return this.loginForm.get('password');
     }
@@ -57,6 +57,8 @@ export class LoginComponent implements OnInit {
             .pipe(tap(
                 user => {
                     this.loader = false;
+                    console.log(user);
+                    
                     this.store.dispatch(new Login({user}));
 
                     this.store.pipe(select(selectorScopes)).subscribe(scopes => {
@@ -68,6 +70,47 @@ export class LoginComponent implements OnInit {
                             //
                         }
                     });
+                    console.log(this.returnUrl);
+
+                    this.router.navigate([this.returnUrl]);
+                }
+            ))
+            .subscribe(
+                () => {},
+                (error) => {
+                    console.log(error);
+                    if (error.error.message) {
+                        this.loginError = error.error.message;
+                    } else {
+                        this.loginError = 'Server Error. Please try again later.';
+                    }
+                    this.loader = false;
+                });
+    }
+
+    adminAuth() {
+        this.loginError = '';
+        this.loader = true;
+
+        this.authenticationService.adminAuth(this.email.value, this.password.value)
+            .pipe(tap(
+                user => {
+                    this.loader = false;
+                    console.log(user);
+                    
+                    this.store.dispatch(new Login({user}));
+
+                    this.store.pipe(select(selectorScopes)).subscribe(scopes => {
+                        this.loginScopes = scopes;
+                        // We have a member
+                        if (scopes?.find(x => x === 'member')) {
+                            this.returnUrl = '/member-loans';
+                        } else {
+                            //
+                        }
+                    });
+                    console.log(this.returnUrl);
+
                     this.router.navigate([this.returnUrl]);
                 }
             ))

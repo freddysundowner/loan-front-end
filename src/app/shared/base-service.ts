@@ -17,12 +17,14 @@ export class BaseService<T extends BaseModel> {
         this.version = environment.production ?  API_VERSION.prod : API_VERSION.dev;
         const parsedUrl = new URL(window.location.href);
 
-        this.apiUrl = this.protocol + parsedUrl.hostname + this.version;
+        this.apiUrl =  this.version;
+        console.log("this.apiUrl",this.apiUrl);
+        
 
         if((parsedUrl.protocol) == 'https:'){
-            this.apiUrl = 'https://' + parsedUrl.hostname + this.version;
+            this.apiUrl = this.version;
         }else {
-            this.apiUrl = 'http://' + parsedUrl.hostname + this.version;
+            this.apiUrl = this.version;
         }
         this.resourceUrl = this.apiUrl + `/` + this.endpoint;
     }
