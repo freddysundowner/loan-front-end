@@ -15,6 +15,7 @@ import { RequirementsComponent } from '../install/requirements/requirements.comp
 import { InstallStartComponent } from '../install/install-start.component';
 import { InstallComponent } from '../install/install.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { OtpComponent } from './otp/otp.component';
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     ],
     declarations: [
         LoginComponent,
+        OtpComponent,
         ForgotPasswordComponent,
         ResetPasswordComponent,
         ConfirmEmailComponent,
@@ -32,9 +34,9 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
         Error500Component,
         InstallStartComponent,
         RequirementsComponent,
-        InstallComponent
+        InstallComponent,
     ],
     providers: [],
 })
 
-export class AuthenticationModule {}
+export class AuthenticationModule { }

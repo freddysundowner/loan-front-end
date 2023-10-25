@@ -1,0 +1,48 @@
+<div class="login-container">
+    <!-- <p style="text-align:center">
+        <img src="../../../assets/img/swcu_logo.png" width="180px" height="100px">
+    </p>-->
+
+    <div class="card">
+        <div class="card-header card-header-primary">
+            <h4 class="card-title">Enter Otp</h4>
+        </div>
+        <div class="card-body">
+
+            <div class="spinner" *ngIf="loader">
+                <mat-spinner [diameter]="48"></mat-spinner>
+            </div>
+
+
+            <div *ngIf="loginError" class="alert alert-danger">
+                {{loginError}}
+            </div>
+
+            <form [formGroup]="otpForm">
+                <mat-form-field>
+                    <input matInput type="text" placeholder="Enter OTP" formControlName="otp">
+                    <mat-icon matSuffix class="material-icons">mail_outline</mat-icon>
+                    <mat-error align="start" class="form__error"></mat-error>
+                </mat-form-field>
+
+
+
+                <div class="divider divider-md"></div>
+
+                <div class="additional-info">
+                    <span class="divider-h"></span>
+                    <a [routerLink]="['/login']">Resend?</a>
+
+                    <button mat-raised-button type="submit" (click)="login()" class="pull-right btn btn-danger"
+                        [disabled]="!otpForm.valid">
+                        Verify otp
+                    </button>
+
+                </div>
+
+                <div class="clearfix"></div>
+            </form>
+
+        </div>
+    </div>
+</div>

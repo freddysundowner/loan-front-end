@@ -6,8 +6,10 @@ import { ConfirmEmailComponent } from './confirm-email/confirm-email.component';
 import { Error404Component } from './404/error-404.component';
 import { Error500Component } from './500/error-500.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { OtpComponent } from './otp/otp.component';
 
 export const AuthenticationRoutes: Routes = [
+        { path: 'otp', component: OtpComponent },
         { path: 'login', component: LoginComponent },
         { path: 'forgot-password', component: ForgotPasswordComponent },
         { path: 'reset-password', component: ResetPasswordComponent },

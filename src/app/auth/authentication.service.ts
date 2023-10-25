@@ -10,18 +10,28 @@ import { User } from './model/user.model';
 export class AuthenticationService extends BaseService<User>{
 
     storageKey = 'be3295963d1091720c8513f78f83c216332190ff714a5239c8b49190443be288';
+    private key_secret: any;
 
     constructor(private http: HttpClient, private router: Router) {
-        super( http, '');
+        super(http, '');
     }
 
-    
+
+    setKeySecret(data: any) {
+        this.key_secret = data;
+    }
+
+    getKeySecret() {
+        return this.key_secret;
+    }
+
+
     adminAuth(username: string, password: string) {
-        return this.http.post<any>(`${super.getApiUrl()}/adminauth`, {email: username, password})
+        return this.http.post<any>(`${super.getApiUrl()}/adminauth`, { email: username, password })
             .pipe(map((user) => {
-                const decodedToken = jwt_decode(user.access_token);
-                user.scope = decodedToken.scopes;
-                return user;
+                // const decodedToken = jwt_decode(user.access_token);
+                // user.scope = decodedToken.scopes;
+                return { auth: user.authenticated, id: user.id };
             }));
     }
 
@@ -30,11 +40,16 @@ export class AuthenticationService extends BaseService<User>{
      * @param username
      * @param password
      */
-    login(username: string, password: string) {
-        return this.http.post<any>(`${super.getApiUrl()}/login`, {email: username, password})
+    login(otp: string, uid: string, keySecret: string) {
+        console.log({ otp, uid, keySecret });
+        
+        return this.http.post<any>(`${super.getApiUrl()}/login`, { otp, uid, keySecret })
             .pipe(map((user) => {
-                const decodedToken = jwt_decode(user.access_token);
-                user.scope = decodedToken.scopes;
+                console.log(user);
+                if (user.access_token) {
+                    const decodedToken = jwt_decode(user.access_token);
+                    user.scope = decodedToken.scopes;
+                }
                 return user;
             }));
     }

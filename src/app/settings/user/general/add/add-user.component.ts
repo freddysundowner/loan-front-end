@@ -45,6 +45,7 @@ export class AddUserComponent implements OnInit  {
             middle_name: [''],
             last_name: ['', [Validators.required,
                 Validators.minLength(3)]],
+            phone: ['', [Validators.required]],
             role_id: [''],
            /* employee_id: [''],*/
             email: [''],
