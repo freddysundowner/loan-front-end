@@ -20,18 +20,18 @@ export const ROUTES1: RouteInfo[] = [
     { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '', permission: ['dashboard-view'] },
 
   //  { path: '/member', title: 'Dashboard',  icon: 'dashboard', class: '', permission: ['member'] },
-    { path: '/member-loans', title: 'Loans -  Active',  icon: 'business', class: '', permission: ['member'] },
+    { path: '/member-loans', title: 'Active Loans',  icon: 'business', class: '', permission: ['member'] },
     { path: '/member-loan-applications', title: 'Loan Applications',  icon: 'business', class: '', permission: ['member'] },
     { path: '/member-payments', title: 'Payments',  icon: 'attach_money', class: '', permission: ['member'] },
-    { path: '/member-withdrawals', title: 'Withdrawals',  icon: 'attach_money', class: '', permission: ['member'] },
+    // { path: '/member-withdrawals', title: 'Withdrawals',  icon: 'attach_money', class: '', permission: ['member'] },
     { path: '/member-profile', title: 'Profile',  icon: 'person', class: '', permission: ['member'] },
     { path: '/member-reports', title: 'Reports',  icon: 'account_tree', class: '', permission: ['member'] }
 ];
 
 export const ROUTES2: RouteInfo[] = [
     { path: '/members', title: 'Members',  icon: 'people', class: '', permission: ['members-add'] },
-    { path: '/loans', title: 'Loans -  Active',  icon: 'business', class: '', permission: ['loans-view'] },
-    { path: '/loan-applications', title: 'Loan Applications',  icon: 'business', class: '', permission: ['loan-applications-add'] }
+    { path: '/loans', title: 'Active Loans',  icon: 'business', class: '', permission: ['loans-view'] },
+    { path: '/loan-applications', title: 'Pending Applications',  icon: 'business', class: '', permission: ['loan-applications-add'] }
 ];
 
 export const ROUTES3: RouteInfo[] = [

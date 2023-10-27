@@ -64,10 +64,10 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
     chargeTypeId: any;
     extraCharges: [];
 
-    constructor(private fb: FormBuilder,  private dialog: MatDialog, private router: Router, private userService: UserSettingService,
-                private loanService: LoanService, private methodService: PaymentMethodSettingService,
-                private notification: NotificationService, private loanApplicationService: LoanApplicationService,
-                private chargeTypeService: ChargeTypeService, private loanChargesSettingService: LoanChargesSettingService) {
+    constructor(private fb: FormBuilder, private dialog: MatDialog, private router: Router, private userService: UserSettingService,
+        private loanService: LoanService, private methodService: PaymentMethodSettingService,
+        private notification: NotificationService, private loanApplicationService: LoanApplicationService,
+        private chargeTypeService: ChargeTypeService, private loanChargesSettingService: LoanChargesSettingService) {
 
         this.loanApplicationData$ = this.loanApplicationService.selectedLoanApplicationChanges$;
         this.loanApplicationService.selectedLoanApplicationChanges$.subscribe(data => {
@@ -97,22 +97,22 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
                 () => this.users = []
             );
 
-        this.methodService.list(['name','display_name'])
+        this.methodService.list(['name', 'display_name'])
             .subscribe((res) => {
-                    this.methods = res;
-                    this.onPaymentMethodItemChange(this.loanApplicationData?.disburse_method_id);
-                },
+                this.methods = res;
+                this.onPaymentMethodItemChange(this.loanApplicationData?.disburse_method_id);
+            },
                 () => this.methods = []
             );
 
         this.form = this.fb.group({
-            amount_applied: [{value: this.loanApplicationData?.amount_applied_display, disabled: true}],
-           // processing_fee_value: [{value: this.loanApplicationData.processing_fee_value, disabled: true}],
-           // processing_fee_type: [{value: this.loanApplicationData?.processing_fee_type?.display_name, disabled: true}],
-            loan_type: [{value: this.loanApplicationData?.loanType?.name, disabled: true}],
-            interest_type: [{value: this.loanApplicationData?.loanType?.interestType?.display_name, disabled: true}],
-            interest_rate: [{value: this.loanApplicationData?.interest_rate, disabled: true}],
-            repayment_period: [{value: this.loanApplicationData?.repayment_period, disabled: false}	],
+            amount_applied: [{ value: this.loanApplicationData?.amount_applied_display, disabled: true }],
+            // processing_fee_value: [{value: this.loanApplicationData.processing_fee_value, disabled: true}],
+            // processing_fee_type: [{value: this.loanApplicationData?.processing_fee_type?.display_name, disabled: true}],
+            loan_type: [{ value: this.loanApplicationData?.loanType?.name, disabled: true }],
+            interest_type: [{ value: this.loanApplicationData?.loanType?.interestType?.display_name, disabled: true }],
+            interest_rate: [{ value: this.loanApplicationData?.interest_rate, disabled: true }],
+            repayment_period: [{ value: this.loanApplicationData?.repayment_period, disabled: false }],
             start_date: [moment(), Validators.required],
             loan_officer_id: [this.loanApplicationData?.loan_officer_id],
             review_notes: [''],
@@ -133,9 +133,9 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
      * Set existing values for loan extra charges
      * @param extraCharges
      */
-    setExtraCharges(extraCharges: any) : FormArray {
+    setExtraCharges(extraCharges: any): FormArray {
 
-        const formArray =  new FormArray([]);
+        const formArray = new FormArray([]);
         extraCharges.forEach(charge => {
             formArray.push(this.fb.group({
                 loan_extra_charge_id: charge.id,
@@ -235,14 +235,21 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
 
         this.loanService.create(body)
             .subscribe((data) => {
-                    this.convertingToLoan = false;
-                    this.onSaveComplete();
-                    this.notification.showNotification('success', 'Success !! New loan created.');
-                    this.router.navigate(['/loans']);
-                },
+                console.log(data);
+
+                this.convertingToLoan = false;
+                this.onSaveComplete();
+                this.notification.showNotification('success', 'Success !! New loan created.');
+                this.router.navigate(['/loans']);
+            },
                 (error) => {
+                    console.log("error", error.error);
                     this.loader = false;
                     this.convertingToLoan = false;
+                    if (error.error.time) {
+                        this.notification.showNotification('danger', error.error.message);
+                        return;
+                    }
                     if (error.member === 0) {
                         this.notification.showNotification('danger', 'Connection Error !! Nothing created.' +
                             ' Check your connection and retry.');
@@ -259,7 +266,7 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
                             }
                             if (this.form) {
                                 this.form.controls[prop]?.markAsTouched();
-                                this.form.controls[prop].setErrors({incorrect: true});
+                                this.form.controls[prop].setErrors({ incorrect: true });
                             }
                         }
                     }
@@ -279,12 +286,12 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
         this.loader = true;
         this.loanApplicationService.update(body)
             .subscribe((data) => {
-                    this.convertingToLoan = false;
-                    this.loader = false;
-                    // notify success
-                    this.notification.showNotification('info', 'Success !! Loan Application rejected !');
-                    this.router.navigate(['/loan-applications']);
-                },
+                this.convertingToLoan = false;
+                this.loader = false;
+                // notify success
+                this.notification.showNotification('info', 'Success !! Loan Application rejected !');
+                this.router.navigate(['/loan-applications']);
+            },
                 (error) => {
                     this.loader = false;
                     this.convertingToLoan = false;
@@ -300,7 +307,7 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
                         for (const prop in this.formErrors) {
                             if (this.form) {
                                 this.form.controls[prop]?.markAsTouched();
-                                this.form.controls[prop].setErrors({incorrect: true});
+                                this.form.controls[prop].setErrors({ incorrect: true });
                             }
                         }
                     }

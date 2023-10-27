@@ -18,7 +18,6 @@ export class BaseService<T extends BaseModel> {
         const parsedUrl = new URL(window.location.href);
 
         this.apiUrl =  this.version;
-        console.log("this.apiUrl",this.apiUrl);
         
 
         if((parsedUrl.protocol) == 'https:'){
