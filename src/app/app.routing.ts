@@ -54,6 +54,13 @@ const routes: Routes = [
         data: { preload: true, delay: true }
       },
       {
+        path: 'all-loans',
+        // loadChildren: './loan-applications/loan-application.module#LoanApplicationModule',
+        loadChildren: () => import('./loan-applications/loan-application.module').then(m => m.LoanApplicationModule),
+        canActivate: [AuthGuard],
+        data: { preload: true, delay: true }
+      },
+      {
         path: 'payments',
        // loadChildren: './payments/payment.module#MemberAreaPaymentModule',
         loadChildren: () => import('./payments/payment.module').then(m => m.PaymentModule),

@@ -31,6 +31,7 @@ export const ROUTES1: RouteInfo[] = [
 export const ROUTES2: RouteInfo[] = [
     { path: '/members', title: 'Members',  icon: 'people', class: '', permission: ['members-add'] },
     { path: '/loans', title: 'Active Loans',  icon: 'business', class: '', permission: ['loans-view'] },
+    { path: '/all-loans', title: 'All Loans',  icon: 'business', class: '', permission: ['loan-applications-add'] },
     { path: '/loan-applications', title: 'Pending Applications',  icon: 'business', class: '', permission: ['loan-applications-add'] }
 ];
 
