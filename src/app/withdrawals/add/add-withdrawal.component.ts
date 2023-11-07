@@ -70,10 +70,10 @@ export class AddWithdrawalComponent implements OnInit, OnDestroy  {
                     this.paymentMethods = res;
 
                     // Remove MPESA as a deposit method
-                    let removeIndex = this.paymentMethods.map(function(item) {
-                        return item.name;
-                    }).indexOf('MPESA');
-                    this.paymentMethods.splice(removeIndex, 1);
+                    // let removeIndex = this.paymentMethods.map(function(item) {
+                    //     return item.name;
+                    // }).indexOf('MPESA');
+                    // this.paymentMethods.splice(removeIndex, 1);
                 },
                 () => this.paymentMethods = []
             );

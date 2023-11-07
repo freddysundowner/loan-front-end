@@ -138,6 +138,8 @@ export class AddLoanTypeComponent implements OnInit  {
                             ' Check your connection and retry.');
                         return;
                     }
+                    console.log(error);
+                    
                     // An array of all form errors as returned by server
                     this.formErrors = error;
 
