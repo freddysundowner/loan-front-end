@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { fromEvent, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from '../shared/delete/confirmation-dialog-component';
+import { LoanApplicationService } from '../loan-applications/data/loan-application.service';
 import { LoanService } from './data/loan.service';
 import { AddLoanComponent } from './add/add-loan.component';
 import { LoanModel } from './models/loan-model';
@@ -55,7 +56,7 @@ export class LoanComponent implements OnInit, AfterViewInit {
     selectedRowIndex = '';
 
     constructor(private service: LoanService, private notification: NotificationService,
-                private dialog: MatDialog, private accountingService: AccountingService) {
+        private dialog: MatDialog, private accountingService: AccountingService, private loanApplicationService: LoanApplicationService) {
     }
 
     /**
@@ -280,7 +281,23 @@ export class LoanComponent implements OnInit, AfterViewInit {
             );
     }
 
+    payLoan(row: any) {
 
+        this.loader = true;
+        this.loanApplicationService.payLoan(row)
+            .subscribe((res) => {
+                this.loader = false;
+                console.log(res)
+            },
+                () => {
+                    this.loader = false;
+                    this.notification.showNotification('danger', 'Error Downloading File!');
+                }
+            );
+    }
+
+
+    
     /**
      *
      * @param blob

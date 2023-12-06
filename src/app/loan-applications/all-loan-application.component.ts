@@ -16,6 +16,7 @@ import { LoanService } from '../loans/data/loan.service';
 import { LoanTypeSettingService } from '../settings/loan/type/data/loan-type-setting.service';
 import { UserSettingService } from '../settings/user/data/user-setting.service';
 import { CalculatorComponent } from './calculator/calculator.component';
+import { AccountingService } from '../accounting/data/accounting.service';
 
 @Component({
     selector: 'app-loan-applications',
@@ -36,20 +37,21 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
 
     loader = false;
 
+    loanStatus: any;
     dialogRef: MatDialogRef<ConfirmationDialogComponent>;
 
     // Search field
     @ViewChild('search') search: ElementRef;
 
     // pagination
-    @ViewChild(MatPaginator, {static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
     // Pagination
     length: number;
     pageIndex = 0;
     pageSizeOptions: number[] = [5, 10, 25, 50, 100];
     meta: any;
-    @ViewChild(MatSort, {static: true}) sort: MatSort;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
 
     // Data for the list table display
     dataSource: LoanApplicationDataSource;
@@ -61,9 +63,9 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
     loanTypes: any = [];
 
     constructor(private service: LoanApplicationService, private notification: NotificationService,
-                private dialog: MatDialog, private membersService: MemberService,
-                private loansService: LoanService, private memberService: MemberService, private userService: UserSettingService,
-                private loanTypeService: LoanTypeSettingService) {
+        private dialog: MatDialog, private membersService: MemberService,
+        private loansService: LoanService, private memberService: MemberService, private userService: UserSettingService,
+        private loanTypeService: LoanTypeSettingService, private accountingService: AccountingService) {
     }
 
     /**
@@ -74,13 +76,13 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
     ngOnInit() {
 
         this.dataSource = new LoanApplicationDataSource(this.service);
-
+        this.loanStatus = [{ "name": "Active", "key": "active" }, { "name": "All Due Loans", "key": "due" }]
         // Load pagination data
         this.dataSource.meta$.subscribe((res) => this.meta = res);
 
         // We load initial data here to avoid affecting life cycle hooks if we load all data on after view init
         // this.dataSource.load('', 0, 0, 'updated_at', 'desc', 'reviewed_on');
-        this.dataSource.load('', 0, 0, 'updated_at', 'desc', );
+        this.dataSource.load('', 0, 0, 'updated_at', 'desc',);
 
         this.memberService.list(['first_name', 'middle_name', 'last_name', 'id_number', 'phone'])
             .subscribe((res) => this.members = res,
@@ -173,14 +175,15 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
-        dialogConfig.data = {loanApplication,
+        dialogConfig.data = {
+            loanApplication,
             members: this.members,
             users: this.users,
             loanTypes: this.loanTypes
         };
 
         console.log(dialogConfig.data);
-        
+
 
         const dialogRef = this.dialog.open(EditLoanApplicationComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(
@@ -192,6 +195,41 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
         );
     }
 
+    downloadStatement(row: any) {
+
+        this.loader = true;
+        this.accountingService.downloadLoanAccountStatement({ id: row.id, pdf: true })
+            .subscribe((res) => {
+                this.loader = false;
+                this.showFile(res);
+            },
+                () => {
+                    this.loader = false;
+                    this.notification.showNotification('danger', 'Error Downloading File!');
+                }
+            );
+    }
+
+    /**
+     *
+     * @param blob
+     */
+    showFile(blob) {
+        let newBlob = new Blob([blob], { type: "application/excel" });
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(newBlob);
+            return;
+        }
+        const data = window.URL.createObjectURL(newBlob);
+        let link = document.createElement('a');
+        link.href = data;
+        link.download = "statement.pdf";
+        link.click();
+        setTimeout(function () {
+            window.URL.revokeObjectURL(data);
+        }, 100);
+    }
     /**
      * Fetch data from data lead
      */
@@ -222,7 +260,7 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
             ).subscribe();
 
         this.paginator.page.pipe(
-            tap(() => this.loadData() )
+            tap(() => this.loadData())
         ).subscribe();
 
         // reset the paginator after sorting
@@ -259,10 +297,10 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
         this.loader = true;
         this.service.delete(loanApplication)
             .subscribe((data) => {
-                    this.loader = false;
-                    this.loadData();
-                    this.notification.showNotification('success', 'Success !! Loan Application has been deleted.');
-                },
+                this.loader = false;
+                this.loadData();
+                this.notification.showNotification('success', 'Success !! Loan Application has been deleted.');
+            },
                 (error) => {
                     this.loader = false;
                     if (!error.error['error']) {
