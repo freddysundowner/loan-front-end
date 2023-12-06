@@ -215,7 +215,7 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
      * @param blob
      */
     showFile(blob) {
-        let newBlob = new Blob([blob], { type: "application/excel" });
+        let newBlob = new Blob([blob], { type: "application/pdf" });
 
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveOrOpenBlob(newBlob);
