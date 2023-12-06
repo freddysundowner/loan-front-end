@@ -15,6 +15,7 @@ export class LoanApplicationModel extends BaseModel {
     rejected_on: string;
 
     member_id: string;
+    first_name: string;
     loan_officer_id: string;
 
     loan_type_id: string;

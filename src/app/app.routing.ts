@@ -56,7 +56,7 @@ const routes: Routes = [
       {
         path: 'all-loans',
         // loadChildren: './loan-applications/loan-application.module#LoanApplicationModule',
-        loadChildren: () => import('./loan-applications/loan-application.module').then(m => m.LoanApplicationModule),
+        loadChildren: () => import('./loan-applications/all-loan-application.module').then(m => m.LoanApplicationModule),
         canActivate: [AuthGuard],
         data: { preload: true, delay: true }
       },

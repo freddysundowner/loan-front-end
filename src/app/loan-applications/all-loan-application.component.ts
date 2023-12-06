@@ -4,7 +4,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { fromEvent, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationDialogComponent } from '../shared/delete/confirmation-dialog-component';
 import { LoanApplicationService } from './data/loan-application.service';
 import { AddLoanApplicationComponent } from './add/add-loan-application.component';
@@ -20,7 +19,7 @@ import { CalculatorComponent } from './calculator/calculator.component';
 
 @Component({
     selector: 'app-loan-applications',
-    templateUrl: './loan-application.component.html',
+    templateUrl: './all-loan-application.component.html',
     styleUrls: ['./loan-application.component.css']
 })
 export class LoanApplicationComponent implements OnInit, AfterViewInit {
@@ -81,7 +80,7 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
 
         // We load initial data here to avoid affecting life cycle hooks if we load all data on after view init
         // this.dataSource.load('', 0, 0, 'updated_at', 'desc', 'reviewed_on');
-        this.dataSource.load('', 0, 0, 'updated_at', 'desc', 'reviewed_on');
+        this.dataSource.load('', 0, 0, 'updated_at', 'desc', );
 
         this.memberService.list(['first_name', 'middle_name', 'last_name', 'id_number', 'phone'])
             .subscribe((res) => this.members = res,
@@ -180,6 +179,9 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
             loanTypes: this.loanTypes
         };
 
+        console.log(dialogConfig.data);
+        
+
         const dialogRef = this.dialog.open(EditLoanApplicationComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(
             (val) => {
@@ -200,7 +202,7 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
             (this.paginator.pageSize),
             this.sort.active,
             this.sort.direction,
-            'reviewed_on'
+            ''
         );
     }
 
