@@ -3,7 +3,6 @@ import * as Chartist from 'chartist';
 import { ActivatedRoute } from '@angular/router';
 import { DashboardService } from './data/dashboard.service';
 import { NotificationService } from '../shared/notification.service';
-import * as ExcelJS from 'exceljs';
 
 @Component({
   selector: 'app-dashboard',
@@ -215,52 +214,18 @@ export class DashboardComponent implements OnInit {
    *
    */
   overDueReport() {
-    // this.loaderOverDue = true;
-    // this.dashboardService.downloadOverDueStatement({ id: '', pdf: true })
-    //   .subscribe((res) => {
-    //     this.loaderOverDue = false;
-    //     console.log(res)
-    //     this.showExcelFile(res, 'loans.xlsx');
-    //   },
-    //     () => {
-    //       this.loaderOverDue = false;
-    //       this.notification.showNotification('danger', 'Error Downloading File!');
-    //     }
-    //   );
-    this.downloadExcel();
-  }
-
-
-  downloadExcel() {
-    // Sample data for the Excel file
-    const data = [
-      ['Name', 'Age', 'Country'],
-      ['John Doe', 30, 'USA'],
-      ['Jane Doe', 25, 'Canada'],
-      ['Bob Smith', 40, 'UK'],
-    ];
-
-    // Create a workbook
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Sheet1');
-
-    // Add data to the worksheet
-    data.forEach(row => {
-      worksheet.addRow(row);
-    });
-
-    // Generate a Blob containing the Excel file
-    workbook.xlsx.writeBuffer().then((buffer: ArrayBuffer) => {
-      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-
-      // Trigger download
-      const fileName = 'sample.xlsx';
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = fileName;
-      link.click();
-      window.URL.revokeObjectURL(link.href);
-    });
+    this.loaderOverDue = true;
+    this.dashboardService.downloadOverDueStatement({ id: '', pdf: true })
+      .subscribe((res) => {
+        this.loaderOverDue = false;
+        console.log(res)
+        // this.showExcelFile(res, 'loans_due1.xlsx');
+      },
+        () => {
+          this.loaderOverDue = false;
+          this.notification.showNotification('danger', 'Error Downloading File!');
+        }
+      );
   }
 
   /**
@@ -304,16 +269,20 @@ export class DashboardComponent implements OnInit {
 
   private showExcelFile(blob: Blob, fileName: string): void {
     const newBlob = new Blob([blob], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(newBlob);
+      return;
+    }
+
     const data = window.URL.createObjectURL(newBlob);
     const link = document.createElement('a');
-    console.log(data)
     link.href = data;
     link.download = fileName;
     link.click();
-    setTimeout(() => {
+    setTimeout(function () {
       window.URL.revokeObjectURL(data);
     }, 100);
-
   }
 
 }
