@@ -219,7 +219,7 @@ export class DashboardComponent implements OnInit {
       .subscribe((res) => {
         this.loaderOverDue = false;
         console.log(res)
-        // this.showExcelFile(res, 'loans_due1.xlsx');
+        this.showExcelFile(res, 'loans_due1.xlsx');
       },
         () => {
           this.loaderOverDue = false;
