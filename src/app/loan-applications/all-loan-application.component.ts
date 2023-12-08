@@ -83,7 +83,10 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
     ngOnInit() {
 
         this.dataSource = new LoanApplicationDataSource(this.service);
-        this.loanStatus = [{ "name": "Active", "key": "active" }, { "name": "All Due Loans", "key": "due" }]
+        this.loanStatus = [
+            // { "name": "Active", "key": "active" },
+            { "name": "All Due Loans", "key": "due" }
+        ]
         // Load pagination data
         this.dataSource.meta$.subscribe((res) => this.meta = res);
 

@@ -15,7 +15,7 @@ import * as moment from 'moment';
     styles: [],
     templateUrl: './add-member.component.html'
 })
-export class AddMemberComponent implements OnInit  {
+export class AddMemberComponent implements OnInit {
 
     form: FormGroup;
 
@@ -44,14 +44,14 @@ export class AddMemberComponent implements OnInit  {
 
     urls = new Array<string>();
 
-    @ViewChild('stepper', {static: true }) stepper: MatStepper;
+    @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
     constructor(@Inject(MAT_DIALOG_DATA) row: any,
-                private fb: FormBuilder,
-                private memberService: MemberService,
-                private notification: NotificationService,
-                private memberMethodService: PaymentMethodSettingService,
-                private dialogRef: MatDialogRef<AddMemberComponent>) {
+        private fb: FormBuilder,
+        private memberService: MemberService,
+        private notification: NotificationService,
+        private memberMethodService: PaymentMethodSettingService,
+        private dialogRef: MatDialogRef<AddMemberComponent>) {
         this.branches = row.branches;
         this.groups = row.groups;
     }
@@ -64,35 +64,45 @@ export class AddMemberComponent implements OnInit  {
             );
 
         this.form = this.fb.group({
-            first_name: ['', [Validators.required,
-                Validators.minLength(2)]],
-            middle_name: ['', [Validators.required,
-                Validators.minLength(2)]],
+            first_name: ['', [Validators.required, Validators.minLength(2)]],
+            middle_name: ['', [Validators.required, Validators.minLength(2)]],
             last_name: [''],
             file_number: [''],
             edp_number: [''],
-            nationality: ['', [Validators.required,
-                Validators.minLength(2)]],
-            id_number: ['', [Validators.required,
-                Validators.minLength(2)]],
+            nationality: ['', [Validators.required, Validators.minLength(2)]],
+            id_number: ['', [Validators.required, Validators.minLength(2)]],
+            confirm_id_number: ['', [Validators.required, Validators.minLength(2)]],
             passport_number: [''],
-            phone: ['', [Validators.required,
-                Validators.minLength(2)]],
+            phone: ['', [Validators.required, Validators.minLength(2)]],
+            confirmphone: ['', [Validators.required, Validators.minLength(2)]],
             email: [''],
-            postal_address: ['', [Validators.required,
-                Validators.minLength(2)]],
-            residential_address: ['', [Validators.required,
-                Validators.minLength(2)]],
+            postal_address: ['', [Validators.required, Validators.minLength(2)]],
+            residential_address: ['', [Validators.required, Validators.minLength(2)]],
             group_id: [''],
             county: [''],
             city: [''],
             status_id: [''],
-            date_of_birth: ['', [Validators.required,
-                Validators.minLength(2)]],
+            date_of_birth: ['', [Validators.required, Validators.minLength(2)]],
             date_became_member: [moment(), Validators.required],
             password: [''],
             password_confirmation: [''],
+        }, {
+            validators: [this.matchingFields('phone', 'confirmphone'), this.matchingFields('id_number', 'confirm_id_number')]
         });
+    }
+
+
+    matchingFields(fieldName: string, confirmFieldName: string) {
+        return (group: FormGroup) => {
+            const field = group.controls[fieldName];
+            const confirmField = group.controls[confirmFieldName];
+
+            if (field.value !== confirmField.value) {
+                confirmField.setErrors({ fieldMismatch: true });
+            } else {
+                confirmField.setErrors(null);
+            }
+        };
     }
 
     save() {
@@ -211,9 +221,9 @@ export class AddMemberComponent implements OnInit  {
         const body = Object.assign({}, this.member, this.form.value);
 
         const formData = new FormData();
-        if(this.profilePicFileToUpload != null)
+        if (this.profilePicFileToUpload != null)
             formData.append('photo', this.profilePicFileToUpload);
-        if(this.membershipFormToUpload != null)
+        if (this.membershipFormToUpload != null)
             formData.append('membership_form', this.membershipFormToUpload);
 
         for (const key in body) {
@@ -225,9 +235,9 @@ export class AddMemberComponent implements OnInit  {
 
         this.memberService.create(formData)
             .subscribe((data) => {
-                    this.onSaveComplete();
-                    this.notification.showNotification('success', 'Success !! New member created.');
-                },
+                this.onSaveComplete();
+                this.notification.showNotification('success', 'Success !! New member created.');
+            },
                 (error) => {
                     this.loader = false;
                     if (error.member === 0) {
@@ -243,7 +253,7 @@ export class AddMemberComponent implements OnInit  {
                         for (const prop in this.formErrors) {
                             if (this.form) {
                                 this.form.controls[prop]?.markAsTouched();
-                                this.form.controls[prop].setErrors({incorrect: true});
+                                this.form.controls[prop].setErrors({ incorrect: true });
                             }
                         }
                     }
