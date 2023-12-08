@@ -32,6 +32,45 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                        
+                            <div class="col-3">
+                                <mat-form-field class="full-width">
+                                    <input matInput [matDatepicker]="start_date" formControlName="start_date" placeholder="Start Date">
+                                    <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
+                                    <mat-datepicker #start_date></mat-datepicker>
+                                    <mat-error align="start" *ngIf="formErrors?.start_date" class="form__error">{{ formErrors.start_date
+                                        }}</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3">
+                                <mat-form-field class="full-width">
+                                    <input matInput [matDatepicker]="end_date" formControlName="end_date" placeholder="End Date">
+                                    <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
+                                    <mat-datepicker #end_date></mat-datepicker>
+                                    <mat-error align="start" *ngIf="formErrors?.end_date" class="form__error">{{ formErrors.end_date
+                                        }}</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3">
+                                <mat-form-field class="full-width" color="primary">
+                                    <mat-select placeholder="Loan Status" formControlName="report_type_id">
+                                        <mat-option *ngFor="let status of loanStatus" [value]="reportType?.id">
+                                            {{status?.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error align="start" *ngIf="formErrors?.report_type_id" class="form__error">{{ formErrors.report_type_id
+                                        }}</mat-error>
+                                </mat-form-field>
+                            </div>
+                        
+                            <div class="col-3">
+                                <button class="mat-raised-button mat-primary" (click)="downloadReport()" >
+                                    <span>Download</span>
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
 
                             <mat-table #table [dataSource]="dataSource" matSort matSortActive="application_date" matSortDirection="desc" matSortDisableClear>
@@ -71,7 +110,7 @@
                                     <mat-cell *matCellDef="let row">
                                         <button mat-button class="{{row.status?.status_color}}">
                                             <mat-icon>{{row.status?.status_icon}}</mat-icon>
-                                            {{row.status?.status}}
+                                            {{row.loan?.closed_on !=null ? "Closed" : row.status?.status =="approved" ? "Active": row.status?.status}}
                                         </button>
                                     </mat-cell>
                                 </ng-container>
@@ -84,12 +123,16 @@
                                                 class="btn btn-primary btn-link btn-sm btn-just-icon">
                                             <i class="material-icons">edit</i>
                                         </button>
-                                            <mat-menu #menu="matMenu">
-                                                <button mat-menu-item (click)="openConfirmationDialog(row)">
-                                                    <mat-icon color="warn">delete</mat-icon>
-                                                    <span>Delete</span>
-                                                </button>
-                                            </mat-menu>
+                                        <button *ngIf="row?.status?.status == 'approved'" [disabled]="loader" mat-icon-button [matMenuTriggerFor]="menu">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu">
+                                            <button [disabled]="loader" mat-menu-item matTooltip="Download Loan Statement." [matTooltipPosition]="'above'"
+                                                (click)="downloadStatement(row.loan)">
+                                                <mat-icon color="primary">picture_as_pdf</mat-icon>
+                                                <span>Statement</span>
+                                            </button>
+                                        </mat-menu>
                                     </mat-cell>
                                 </ng-container>
 

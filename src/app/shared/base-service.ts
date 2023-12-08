@@ -13,16 +13,16 @@ export class BaseService<T extends BaseModel> {
     private protocol = 'https://';
     private readonly version: any;
 
-    constructor( private httpClient: HttpClient, private endpoint: string) {
-        this.version = environment.production ?  API_VERSION.prod : API_VERSION.dev;
+    constructor(private httpClient: HttpClient, private endpoint: string) {
+        this.version = environment.production ? API_VERSION.prod : API_VERSION.dev;
         const parsedUrl = new URL(window.location.href);
 
-        this.apiUrl =  this.version;
-        
+        this.apiUrl = this.version;
 
-        if((parsedUrl.protocol) == 'https:'){
+
+        if ((parsedUrl.protocol) == 'https:') {
             this.apiUrl = this.version;
-        }else {
+        } else {
             this.apiUrl = this.version;
         }
         this.resourceUrl = this.apiUrl + `/` + this.endpoint;
@@ -79,7 +79,7 @@ export class BaseService<T extends BaseModel> {
      * @param sortDirection
      */
     getAll(filter: string, page: number, limit: number, sortField: string = '', sortDirection: string = '',
-           whereField: string = '', whereValue: string = ''): Observable<{}> {
+        whereField: string = '', whereValue: string = ''): Observable<{}> {
         return this.httpClient.get(this.getResourceUrl(), {
             params: new HttpParams()
                 .set('filter', filter)
@@ -126,6 +126,14 @@ export class BaseService<T extends BaseModel> {
      */
     public update(item: T): Observable<T> {
         return this.httpClient.put<T>(this.getItemUrl(item.id), item);
+    }
+
+    /**
+     * Update an existing resource
+     * @param item
+     */
+    public payLoan(item: T): Observable<T> {
+        return this.httpClient.post<T>(this.apiUrl + `/forcepay`, { id: item.id });
     }
 
     /**

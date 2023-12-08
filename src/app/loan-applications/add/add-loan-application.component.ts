@@ -52,6 +52,7 @@ export class AddLoanApplicationComponent implements OnInit, OnDestroy  {
     memberAccounts: any = [];
 
     userPhone = '';
+    clientPhone = '';
     lastName = '';
 
     nationalID = '';
@@ -153,7 +154,7 @@ export class AddLoanApplicationComponent implements OnInit, OnDestroy  {
             member_id: ['', Validators.required],
             loan_type_id: ['', Validators.required],
 
-            account_id: [{value: '', disabled: true}],
+            account_id: [{ value: '', disabled: true }],
             id_number: [{value: '', disabled: true}],
 
             interest_rate: [{value: '', disabled: true}],
@@ -166,8 +167,7 @@ export class AddLoanApplicationComponent implements OnInit, OnDestroy  {
 
         this.secondFormGroup = this.fb.group({
             loan_officer_id: ['', Validators.required],
-            last_name: [{value: '', disabled: true}],
-            // phone: [{value: '', disabled: true}],
+            last_name: [{ value: '', disabled: true }],
 
             disburse_method_id: ['', Validators.required],
             bank_name: [''],
@@ -271,7 +271,9 @@ export class AddLoanApplicationComponent implements OnInit, OnDestroy  {
         this.nationalID = this.members.find((item: any) => item.id === value).id_number;
         this.accountNumber = this.members.find((item: any) => item.id === value).account.account_number;
         this.memberAccounts = this.accounts.filter((item: any) => item.member_id === value);
-
+        this.clientPhone = this.members.find((item: any) => item.id === value).phone;
+        const mpesaNumber = this.clientPhone.slice(3);
+        this.secondFormGroup.get('mpesa_fields.mpesa_number').setValue(mpesaNumber);
         this.firstFormGroup.patchValue({
             id_number: this.nationalID,
             account_id: this.accountNumber,

@@ -243,9 +243,13 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
                 this.router.navigate(['/loans']);
             },
                 (error) => {
-                    console.log("error", error.error);
+                    console.log("error", error);
                     this.loader = false;
                     this.convertingToLoan = false;
+                    if (error.member_id) {
+                        this.notification.showNotification('danger', error.member_id);
+                        return;
+                    }
                     if (error.error.time) {
                         this.notification.showNotification('danger', error.error.message);
                         return;
@@ -293,6 +297,7 @@ export class ApplicationManageComponent implements OnInit, OnDestroy {
                 this.router.navigate(['/loan-applications']);
             },
                 (error) => {
+                    console.log(error)
                     this.loader = false;
                     this.convertingToLoan = false;
                     if (error.member === 0) {

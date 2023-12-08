@@ -92,6 +92,10 @@
                                                     <mat-icon color="primary">picture_as_pdf</mat-icon>
                                                     <span>Statement</span>
                                                 </button>
+                                                <button [disabled]="loader" mat-menu-item matTooltip="Pay this Loan." [matTooltipPosition]="'above'"
+                                                    (click)="payLoan(row)">
+                                                    <span>Pay Loan</span>
+                                                </button>
                                             </mat-menu>
                                     </mat-cell>
                                 </ng-container>

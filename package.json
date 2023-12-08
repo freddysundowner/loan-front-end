@@ -45,6 +45,7 @@
     "chartist": "0.11.0",
     "classlist.js": "1.1.20150312",
     "core-js": "2.4.1",
+    "exceljs": "^4.4.0",
     "express": "4.16.3",
     "googleapis": "^47.0.0",
     "jquery": "^3.5.1",
@@ -58,6 +59,7 @@
     "rxjs-compat": "^6.5.2",
     "tslib": "^1.11.1",
     "web-animations-js": "2.3.1",
+    "xlsx": "^0.18.5",
     "zone.js": "0.10.3"
   },
   "devDependencies": {
