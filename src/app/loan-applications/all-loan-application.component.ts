@@ -182,9 +182,6 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
             loanTypes: this.loanTypes
         };
 
-        console.log(dialogConfig.data);
-
-
         const dialogRef = this.dialog.open(EditLoanApplicationComponent, dialogConfig);
         dialogRef.afterClosed().subscribe(
             (val) => {
