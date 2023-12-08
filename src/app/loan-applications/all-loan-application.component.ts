@@ -2,6 +2,8 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as moment from 'moment';
 import { fromEvent, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { ConfirmationDialogComponent } from '../shared/delete/confirmation-dialog-component';
@@ -17,6 +19,8 @@ import { LoanTypeSettingService } from '../settings/loan/type/data/loan-type-set
 import { UserSettingService } from '../settings/user/data/user-setting.service';
 import { CalculatorComponent } from './calculator/calculator.component';
 import { AccountingService } from '../accounting/data/accounting.service';
+import { DashboardService } from '../dashboard/data/dashboard.service';
+import { FinanceStatementModel } from '../accounting/models/finance-statement.model';
 
 @Component({
     selector: 'app-loan-applications',
@@ -36,6 +40,7 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
     ];
 
     loader = false;
+    form: FormGroup;
 
     loanStatus: any;
     dialogRef: MatDialogRef<ConfirmationDialogComponent>;
@@ -57,15 +62,17 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
     dataSource: LoanApplicationDataSource;
 
     selectedRowIndex = '';
+    financeStatement: FinanceStatementModel;
 
     members: any = [];
     users: any = [];
     loanTypes: any = [];
 
-    constructor(private service: LoanApplicationService, private notification: NotificationService,
+    constructor(private service: LoanApplicationService, private fb: FormBuilder, private notification: NotificationService,
         private dialog: MatDialog, private membersService: MemberService,
         private loansService: LoanService, private memberService: MemberService, private userService: UserSettingService,
-        private loanTypeService: LoanTypeSettingService, private accountingService: AccountingService) {
+        private loanTypeService: LoanTypeSettingService, private accountingService: AccountingService,
+        private dashboardService: DashboardService) {
     }
 
     /**
@@ -115,6 +122,57 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
                 this.onSelected(data[0]);
             }
         });
+
+        this.form = this.fb.group({
+            start_date: [''],
+            end_date: [moment()],
+            report_type_id: ['', [Validators.required,
+            Validators.minLength(1)]],
+        });
+
+    }
+
+
+    /**
+     *
+     */
+    downloadReport() {
+
+        this.loader = true;
+
+        const body = Object.assign({}, this.financeStatement, this.form.value);
+        console.log(body);
+        this.dashboardService.downloadOverDueStatement(body)
+            .subscribe((res) => {
+                this.loader = false;
+                console.log(res)
+                this.showExcelFile(res, 'loans_due1.xlsx');
+            },
+                () => {
+                    this.loader = false;
+                    this.notification.showNotification('danger', 'Error Downloading File!');
+                }
+        );
+
+    }
+
+
+    private showExcelFile(blob: Blob, fileName: string): void {
+        const newBlob = new Blob([blob], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(newBlob);
+            return;
+        }
+
+        const data = window.URL.createObjectURL(newBlob);
+        const link = document.createElement('a');
+        link.href = data;
+        link.download = fileName;
+        link.click();
+        setTimeout(function () {
+            window.URL.revokeObjectURL(data);
+        }, 100);
     }
 
     onSelected(loanApplication: LoanApplicationModel): void {
@@ -316,6 +374,7 @@ export class LoanApplicationComponent implements OnInit, AfterViewInit {
         this.search.nativeElement.value = '';
         this.loadData()
     }
+
 }
 
 

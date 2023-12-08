@@ -76,6 +76,7 @@ export class FinanceComponent implements OnInit {
     downloadReport() {
         this.loader = true;
         const body = Object.assign({}, this.financeStatement, this.form.value);
+        console.log(body);
         this.financeStatementService.downloadReport(body)
             .subscribe((res) => {
                     this.loader = false;

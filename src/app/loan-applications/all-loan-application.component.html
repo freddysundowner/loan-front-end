@@ -31,7 +31,7 @@
                                 </mat-form-field>
                             </div>
                         </div>
-
+<form [formGroup]="form">
                         <div class="row">
                         
                             <div class="col-3">
@@ -55,7 +55,7 @@
                             <div class="col-3">
                                 <mat-form-field class="full-width" color="primary">
                                     <mat-select placeholder="Loan Status" formControlName="report_type_id">
-                                        <mat-option *ngFor="let status of loanStatus" [value]="reportType?.id">
+                                        <mat-option *ngFor="let status of loanStatus" [value]="status.key">
                                             {{status?.name}}
                                         </mat-option>
                                     </mat-select>
@@ -70,7 +70,7 @@
                                 </button>
                             </div>
                         </div>
-
+</form>
                         <div class="table-responsive">
 
                             <mat-table #table [dataSource]="dataSource" matSort matSortActive="application_date" matSortDirection="desc" matSortDisableClear>

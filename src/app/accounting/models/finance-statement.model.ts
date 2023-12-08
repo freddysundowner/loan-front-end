@@ -5,4 +5,5 @@ export class FinanceStatementModel extends BaseModel {
     start_date: string;
     end_date: string;
     statement_type_id: string;
+    loan_type_id: string;
 }
