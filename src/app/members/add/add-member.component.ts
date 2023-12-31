@@ -71,7 +71,7 @@ export class AddMemberComponent implements OnInit {
             edp_number: [''],
             nationality: ['', [Validators.required, Validators.minLength(2)]],
             id_number: ['', [Validators.required, Validators.minLength(2)]],
-            confirm_id_number: ['', [Validators.required, Validators.minLength(2)]],
+            confirmid_number: ['', [Validators.required, Validators.minLength(2)]],
             passport_number: [''],
             phone: ['', [Validators.required, Validators.minLength(2)]],
             confirmphone: ['', [Validators.required, Validators.minLength(2)]],
@@ -87,7 +87,7 @@ export class AddMemberComponent implements OnInit {
             password: [''],
             password_confirmation: [''],
         }, {
-            validators: [this.matchingFields('phone', 'confirmphone'), this.matchingFields('id_number', 'confirm_id_number')]
+            validators: [this.matchingFields('phone', 'confirmphone'), this.matchingFields('id_number', 'confirmid_number')]
         });
     }
 
@@ -250,6 +250,7 @@ export class AddMemberComponent implements OnInit {
 
                     if (this.formErrors) {
                         // loop through from fields, If has an error, mark as invalid so mat-error can show
+                        console.log(this.formErrors)
                         for (const prop in this.formErrors) {
                             if (this.form) {
                                 this.form.controls[prop]?.markAsTouched();

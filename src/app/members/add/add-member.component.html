@@ -59,22 +59,22 @@
         <div class="col-6">
             <mat-form-field class="full-width" color="primary" appearance="outline">
                 <mat-label>Phone</mat-label>
-                <input matInput formControlName="phone" placeholder="Phone">
+                <input matInput formControlName="phone" placeholder="Phone" oncopy="return false" oncut="return false" onpaste="return false" ondrag="return false" ondrop="return false" autocomplete=off>
                 <mat-error align="start" *ngIf="formErrors?.phone" class="form__error">{{ formErrors.phone }}</mat-error>
             </mat-form-field>
         </div><div class="col-6">
             <mat-form-field class="full-width" color="primary" appearance="outline">
                 <mat-label>Confirm Phone</mat-label>
-                <input matInput formControlName="confirmphone" placeholder="Confirm Phone">
+                <input matInput formControlName="confirmphone" placeholder="Confirm Phone" oncopy="return false" oncut="return false" onpaste="return false" ondrag="return false" ondrop="return false" autocomplete=off>
                 <mat-error align="start" *ngIf="formErrors?.confirmphone" class="form__error">{{ formErrors.confirmphone }}</mat-error>
             </mat-form-field>
-        </div>
+        </div>  
     </div>
     <div class="row">
         <div class="col-6">
             <mat-form-field class="full-width" color="primary" appearance="outline">
                 <mat-label>National ID or Passport</mat-label>
-                <input matInput formControlName="id_number" placeholder="National ID or Passport">
+                <input matInput formControlName="id_number" placeholder="National ID or Passport" autocomplete="off">
                 <mat-error align="start" *ngIf="formErrors?.id_number" class="form__error">{{ formErrors.id_number
                     }}</mat-error>
             </mat-form-field>
@@ -82,7 +82,7 @@
         </div><div class="col-6">
             <mat-form-field class="full-width" color="primary" appearance="outline">
                 <mat-label>Confirm National ID or Passport</mat-label>
-                <input matInput formControlName="confirmid_number" placeholder="Confirm National ID or Passport">
+                <input matInput formControlName="confirmid_number" placeholder="Confirm National ID or Passport" autocomplete="off">
                 <mat-error align="start" *ngIf="formErrors?.confirmid_number" class="form__error">{{ formErrors.confirmid_number
                     }}</mat-error>
             </mat-form-field>
