@@ -1,275 +1,306 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatStepper } from '@angular/material/stepper';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MemberModel } from '../models/member-model';
-import { MemberService } from '../data/member.service';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+} from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatStepper } from "@angular/material/stepper";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { MemberModel } from "../models/member-model";
+import { MemberService } from "../data/member.service";
 
-import { NotificationService } from '../../shared/notification.service';
-import { PaymentMethodSettingService } from '../../settings/payment/method/data/payment-method-setting.service';
-import * as moment from 'moment';
+import { NotificationService } from "../../shared/notification.service";
+import { PaymentMethodSettingService } from "../../settings/payment/method/data/payment-method-setting.service";
+import * as moment from "moment";
 
 @Component({
-    selector: 'app-add-member',
-    styles: [],
-    templateUrl: './add-member.component.html'
+  selector: "app-add-member",
+  styles: [],
+  templateUrl: "./add-member.component.html",
 })
 export class AddMemberComponent implements OnInit {
+  form: FormGroup;
 
-    form: FormGroup;
+  formErrors: any;
 
-    formErrors: any;
+  member: MemberModel;
 
-    member: MemberModel;
+  loader = false;
 
-    loader = false;
+  memberMethods: any = [];
+  groups: any = [];
+  genders: any = [];
+  emplymenttypes: any = [];
 
-    memberMethods: any = [];
-    groups: any = [];
+  formGroup: FormGroup;
 
-    formGroup: FormGroup;
+  memberStatuses: any = [];
+  memberSources: any = [];
+  memberTypes: any = [];
+  branches: any = [];
 
-    memberStatuses: any = [];
-    memberSources: any = [];
-    memberTypes: any = [];
-    branches: any = [];
+  profilePicFileToUpload: File = null;
+  membershipFormFileToUpload: File = null;
+  profilePicUrl = "";
 
-    profilePicFileToUpload: File = null;
-    membershipFormFileToUpload: File = null;
-    profilePicUrl = '';
+  membershipFormToUpload: File = null;
+  membershipFormUrl = "";
 
-    membershipFormToUpload: File = null;
-    membershipFormUrl = '';
+  urls = new Array<string>();
 
-    urls = new Array<string>();
+  @ViewChild("stepper", { static: true }) stepper: MatStepper;
 
-    @ViewChild('stepper', { static: true }) stepper: MatStepper;
+  constructor(
+    @Inject(MAT_DIALOG_DATA) row: any,
+    private fb: FormBuilder,
+    private memberService: MemberService,
+    private notification: NotificationService,
+    private memberMethodService: PaymentMethodSettingService,
+    private dialogRef: MatDialogRef<AddMemberComponent>
+  ) {
+    this.branches = row.branches;
+    this.groups = row.groups;
+    this.genders = ["male", "female"];
+    this.emplymenttypes = ["employed", "self employed"];
+  }
 
-    constructor(@Inject(MAT_DIALOG_DATA) row: any,
-        private fb: FormBuilder,
-        private memberService: MemberService,
-        private notification: NotificationService,
-        private memberMethodService: PaymentMethodSettingService,
-        private dialogRef: MatDialogRef<AddMemberComponent>) {
-        this.branches = row.branches;
-        this.groups = row.groups;
-    }
+  ngOnInit() {
+    this.memberMethodService.list("name").subscribe(
+      (res) => (this.memberMethods = res),
+      () => (this.memberMethods = [])
+    );
 
-    ngOnInit() {
+    this.form = this.fb.group(
+      {
+        first_name: ["", [Validators.required, Validators.minLength(2)]],
+        middle_name: ["", [Validators.required, Validators.minLength(2)]],
+        last_name: [""],
+        file_number: [""],
+        edp_number: [""],
+        nationality: ["", [Validators.required, Validators.minLength(2)]],
+        id_number: ["", [Validators.required, Validators.minLength(2)]],
+        confirmid_number: ["", [Validators.required, Validators.minLength(2)]],
+        passport_number: [""],
+        phone: ["", [Validators.required, Validators.minLength(2)]],
+        confirmphone: ["", [Validators.required, Validators.minLength(2)]],
+        email: [""],
+        postal_address: ["", [Validators.required, Validators.minLength(2)]],
+        residential_address: [
+          "",
+          [Validators.required, Validators.minLength(2)],
+        ],
+        group_id: [""],
+        county: [""],
+        city: [""],
+        status_id: [""],
+        date_of_birth: ["", [Validators.required, Validators.minLength(2)]],
+        date_became_member: [moment(), Validators.required],
 
-        this.memberMethodService.list('name')
-            .subscribe((res) => this.memberMethods = res,
-                () => this.memberMethods = []
-            );
+        nx_first_name: [""],
+        nx_id_number: [""],
+        nx_nationality: [""],
+        nx_phone_number: [""],
+        nx_alt_phone_number: [""],
+        nx_gender: [""],
+        nx_relationship: [""],
+        employment_type: [""],
+        bs_nature: [""],
+        bs_location: [""],
+        stock_level: [""],
+        bs_start_date: [""],
+        password: [""],
+        password_confirmation: [""],
+      },
+      {
+        validators: [
+          this.matchingFields("phone", "confirmphone"),
+          this.matchingFields("id_number", "confirmid_number"),
+        ],
+      }
+    );
+  }
 
-        this.form = this.fb.group({
-            first_name: ['', [Validators.required, Validators.minLength(2)]],
-            middle_name: ['', [Validators.required, Validators.minLength(2)]],
-            last_name: [''],
-            file_number: [''],
-            edp_number: [''],
-            nationality: ['', [Validators.required, Validators.minLength(2)]],
-            id_number: ['', [Validators.required, Validators.minLength(2)]],
-            confirmid_number: ['', [Validators.required, Validators.minLength(2)]],
-            passport_number: [''],
-            phone: ['', [Validators.required, Validators.minLength(2)]],
-            confirmphone: ['', [Validators.required, Validators.minLength(2)]],
-            email: [''],
-            postal_address: ['', [Validators.required, Validators.minLength(2)]],
-            residential_address: ['', [Validators.required, Validators.minLength(2)]],
-            group_id: [''],
-            county: [''],
-            city: [''],
-            status_id: [''],
-            date_of_birth: ['', [Validators.required, Validators.minLength(2)]],
-            date_became_member: [moment(), Validators.required],
-            password: [''],
-            password_confirmation: [''],
-        }, {
-            validators: [this.matchingFields('phone', 'confirmphone'), this.matchingFields('id_number', 'confirmid_number')]
-        });
-    }
+  matchingFields(fieldName: string, confirmFieldName: string) {
+    return (group: FormGroup) => {
+      const field = group.controls[fieldName];
+      const confirmField = group.controls[confirmFieldName];
 
+      if (field.value !== confirmField.value) {
+        confirmField.setErrors({ fieldMismatch: true });
+      } else {
+        confirmField.setErrors(null);
+      }
+    };
+  }
 
-    matchingFields(fieldName: string, confirmFieldName: string) {
-        return (group: FormGroup) => {
-            const field = group.controls[fieldName];
-            const confirmField = group.controls[confirmFieldName];
+  save() {
+    this.dialogRef.close(this.form.value);
+  }
 
-            if (field.value !== confirmField.value) {
-                confirmField.setErrors({ fieldMismatch: true });
-            } else {
-                confirmField.setErrors(null);
-            }
+  close() {
+    this.dialogRef.close();
+  }
+
+  /**
+   *
+   * @param event
+   */
+  detectFiles(event) {
+    this.urls = [];
+    let files = event.target.files;
+    if (files) {
+      for (let file of files) {
+        let reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.urls.push(e.target.result);
         };
+        reader.readAsDataURL(file);
+      }
     }
+  }
 
-    save() {
-        this.dialogRef.close(this.form.value);
+  /**
+   *
+   * @param file
+   */
+  handleFileInput(file: FileList) {
+    this.profilePicFileToUpload = file.item(0);
+
+    const reader = new FileReader();
+
+    reader.onload = (event: any) => {
+      this.profilePicUrl = event.target.result;
+    };
+
+    reader.readAsDataURL(this.profilePicFileToUpload);
+  }
+
+  /**
+   *
+   * @param file
+   */
+  onProfilePicSelect(file: FileList) {
+    if (file.length > 0) {
+      this.profilePicFileToUpload = file.item(0);
+
+      const reader = new FileReader();
+
+      reader.onload = (event: any) => {
+        this.profilePicUrl = event.target.result;
+      };
+      reader.readAsDataURL(this.profilePicFileToUpload);
     }
+  }
 
-    close() {
-        this.dialogRef.close();
+  /**
+   *
+   * @param file
+   */
+  onMembershipFormInputSelect(file: FileList) {
+    if (file.length > 0) {
+      this.membershipFormFileToUpload = file.item(0);
+
+      const reader = new FileReader();
+
+      reader.onload = (event: any) => {
+        this.membershipFormUrl = event.target.result;
+      };
+
+      reader.readAsDataURL(this.membershipFormFileToUpload);
     }
+  }
 
-    /**
-     *
-     * @param event
-     */
-    detectFiles(event) {
-        this.urls = [];
-        let files = event.target.files;
-        if (files) {
-            for (let file of files) {
-                let reader = new FileReader();
-                reader.onload = (e: any) => {
-                    this.urls.push(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+  /**
+   *
+   * @param event
+   */
+  onFileSelect(event) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.form.get("photo").setValue(file);
     }
+  }
 
-    /**
-     *
-     * @param file
-     */
-    handleFileInput(file: FileList) {
-        this.profilePicFileToUpload = file.item(0);
+  /**
+   *
+   * @param file
+   */
+  membershipFormUpload(file: FileList) {
+    if (file.length > 0) {
+      this.membershipFormToUpload = file.item(0);
 
-        const reader = new FileReader();
+      const reader = new FileReader();
 
-        reader.onload = (event: any) => {
-            this.profilePicUrl = event.target.result;
-        };
-
-        reader.readAsDataURL(this.profilePicFileToUpload);
+      reader.onload = (event: any) => {
+        this.membershipFormUrl = event.target.result;
+      };
+      reader.readAsDataURL(this.membershipFormToUpload);
     }
+  }
 
-    /**
-     *
-     * @param file
-     */
-    onProfilePicSelect(file: FileList) {
+  /**
+   * Create member
+   */
+  create() {
+    const body = Object.assign({}, this.member, this.form.value);
 
-        if (file.length > 0) {
-            this.profilePicFileToUpload = file.item(0);
+    const formData = new FormData();
+    if (this.profilePicFileToUpload != null)
+      formData.append("photo", this.profilePicFileToUpload);
+    if (this.membershipFormToUpload != null)
+      formData.append("membership_form", this.membershipFormToUpload);
 
-            const reader = new FileReader();
-
-            reader.onload = (event: any) => {
-                this.profilePicUrl = event.target.result;
-            };
-            reader.readAsDataURL(this.profilePicFileToUpload);
-        }
+    for (const key in body) {
+      if (body.hasOwnProperty(key)) {
+        formData.append(key, body[key]);
+      }
     }
+    this.loader = true;
 
-    /**
-     *
-     * @param file
-     */
-    onMembershipFormInputSelect(file: FileList) {
-
-        if (file.length > 0) {
-            this.membershipFormFileToUpload = file.item(0);
-
-            const reader = new FileReader();
-
-            reader.onload = (event: any) => {
-                this.membershipFormUrl = event.target.result;
-            };
-
-            reader.readAsDataURL(this.membershipFormFileToUpload);
-        }
-    }
-
-    /**
-     *
-     * @param event
-     */
-    onFileSelect(event) {
-        if (event.target.files.length > 0) {
-            const file = event.target.files[0];
-            this.form.get('photo').setValue(file);
-        }
-    }
-
-    /**
-     *
-     * @param file
-     */
-    membershipFormUpload(file: FileList) {
-
-        if (file.length > 0) {
-            this.membershipFormToUpload = file.item(0);
-
-            const reader = new FileReader();
-
-            reader.onload = (event: any) => {
-                this.membershipFormUrl = event.target.result;
-            };
-            reader.readAsDataURL(this.membershipFormToUpload);
-        }
-    }
-
-    /**
-     * Create member
-     */
-    create() {
-
-        const body = Object.assign({}, this.member, this.form.value);
-
-        const formData = new FormData();
-        if (this.profilePicFileToUpload != null)
-            formData.append('photo', this.profilePicFileToUpload);
-        if (this.membershipFormToUpload != null)
-            formData.append('membership_form', this.membershipFormToUpload);
-
-        for (const key in body) {
-            if (body.hasOwnProperty(key)) {
-                formData.append(key, body[key]);
-            }
-        }
-        this.loader = true;
-
-        this.memberService.create(formData)
-            .subscribe((data) => {
-                this.onSaveComplete();
-                this.notification.showNotification('success', 'Success !! New member created.');
-            },
-                (error) => {
-                    this.loader = false;
-                    if (error.member === 0) {
-                        this.notification.showNotification('danger', 'Connection Error !! Nothing created.' +
-                            ' Check your connection and retry.');
-                        return;
-                    }
-                    // An array of all form errors as returned by server
-                    this.formErrors = error;
-
-                    if (this.formErrors) {
-                        // loop through from fields, If has an error, mark as invalid so mat-error can show
-                        console.log(this.formErrors)
-                        for (const prop in this.formErrors) {
-                            if (this.form) {
-                                this.form.controls[prop]?.markAsTouched();
-                                this.form.controls[prop].setErrors({ incorrect: true });
-                            }
-                        }
-                    }
-
-                });
-    }
-
-    /**
-     *
-     */
-    public onSaveComplete(): void {
+    this.memberService.create(formData).subscribe(
+      (data) => {
+        this.onSaveComplete();
+        this.notification.showNotification(
+          "success",
+          "Success !! New member created."
+        );
+      },
+      (error) => {
         this.loader = false;
-        this.form.reset();
-        this.dialogRef.close(this.form.value);
-    }
+        if (error.member === 0) {
+          this.notification.showNotification(
+            "danger",
+            "Connection Error !! Nothing created." +
+              " Check your connection and retry."
+          );
+          return;
+        }
+        // An array of all form errors as returned by server
+        this.formErrors = error;
 
+        if (this.formErrors) {
+          // loop through from fields, If has an error, mark as invalid so mat-error can show
+          for (const prop in this.formErrors) {
+            if (this.form) {
+              this.form.controls[prop]?.markAsTouched();
+              this.form.controls[prop].setErrors({ incorrect: true });
+            }
+          }
+        }
+      }
+    );
+  }
+
+  /**
+   *
+   */
+  public onSaveComplete(): void {
+    this.loader = false;
+    this.form.reset();
+    this.dialogRef.close(this.form.value);
+  }
 }
-

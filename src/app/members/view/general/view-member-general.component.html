@@ -111,6 +111,74 @@
                     </div>
                 </div>
 
+                <h4 class="card-title ">Next of Kin Information</h4>
+                <div class="row">
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="Full Names" disabled value="{{(memberData$|async)?.nx_first_name}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="Alt Phone Number" disabled value="{{(memberData$|async)?.nx_alt_phone_number}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="Gender" disabled value="{{(memberData$|async)?.nx_gender}}">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="ID Number" disabled value="{{(memberData$|async)?.nx_id_number}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="Nationality" disabled value="{{(memberData$|async)?.nx_nationality}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="Phone Number" disabled value="{{(memberData$|async)?.nx_phone_number}}">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <mat-form-field>
+                            <input matInput placeholder="Address" disabled value="{{(memberData$|async)?.bs_location}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field>
+                            <input matInput placeholder="Relationship" disabled value="{{(memberData$|async)?.nx_relationship}}">
+                        </mat-form-field>
+                    </div>
+                </div>
+                
+                <h4 class="card-title ">Business /Employer information</h4>
+                <div class="row">
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="Emplyment Type" disabled value="{{(memberData$|async)?.employment_type}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="Business Nature" disabled value="{{(memberData$|async)?.bs_nature
+}}">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field>
+                            <input matInput placeholder="Business Start Date" disabled value="{{(memberData$|async)?.bs_start_date}}">
+                        </mat-form-field>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

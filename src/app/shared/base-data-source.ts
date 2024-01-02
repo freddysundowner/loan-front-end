@@ -34,6 +34,8 @@ export class BaseDataSource implements DataSource<any> {
             finalize(() => this.loadingSubject.next(false))
         )
             .subscribe((res) => {
+                console.log(res);
+                
                 this.dataSubject.next(res['data']);
                 this.metaSubject.next(res['meta']);
             } );
