@@ -155,6 +155,12 @@
           formControlName="id_number"
           placeholder="National ID or Passport"
           autocomplete="off"
+          
+          oncopy="return false"
+          oncut="return false"
+          onpaste="return false"
+          ondrag="return false"
+          ondrop="return false"
         />
         <mat-error
           align="start"
@@ -171,6 +177,11 @@
           matInput
           formControlName="confirmid_number"
           placeholder="Confirm National ID or Passport"
+          oncopy="return false"
+          oncut="return false"
+          onpaste="return false"
+          ondrag="return false"
+          ondrop="return false"
           autocomplete="off"
         />
         <mat-error

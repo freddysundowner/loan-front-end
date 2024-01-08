@@ -179,7 +179,7 @@
                                     <mat-label>Mpesa Number</mat-label>
                                     <span matPrefix>254</span>
                                     <input matInput type="number" min="0" formControlName="mpesa_number"
-                                        placeholder="Mpesa Number">
+                                        placeholder="Mpesa Number" readonly>
                                     <mat-hint align="start"><strong>e.g: 712 345 678</strong> </mat-hint>
                                     <mat-error align="start" *ngIf="formErrors?.mpesa_number" class="form__error">{{
                                         formErrors.mpesa_number }}</mat-error>
